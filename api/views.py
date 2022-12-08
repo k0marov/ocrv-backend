@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from django.core.files.storage import FileSystemStorage
 from rest_framework import renderers, status
 from rest_framework.decorators import api_view
 from api import api_logger
@@ -38,12 +39,13 @@ def texts(request):
 
 
 @api_view(['POST'])
-def speeches():
-    # file = request.files['speech']
-    # if file and allowed_file(request.json['text_id']):
-    #     filename = secure_filename(request.json['text_id'])
-    #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    # logger.info(f"Success text id: {request.json['text_id']}; retries: {request.json['retries']}")
+def speeches(request):
+    speech = request.data["speech"]
+    text_id = request.data["text_id"]
+    retries = request.data["retries"]
+    filename = text_id + ".mp4"
+    FileSystemStorage(location="./recordings/").save(filename, speech)
+    logger.info(f"Success text id: {text_id}; retries: {retries}")
     return Response(status=status.HTTP_200_OK)
 
 
