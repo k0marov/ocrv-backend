@@ -1,8 +1,12 @@
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework import renderers, status
-from rest_framework.decorators import api_view
-from api import api_logger
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authtoken.models import Token
 
+from api.serializers import UserSerializer
+from api import api_logger
 from api.services import services
 
 logger = api_logger.get_logger(__name__)
@@ -10,12 +14,13 @@ json_renderer = renderers.JSONRenderer()
 
 
 @api_view(['GET'])
-def index(request):
+@permission_classes([AllowAny])
+def index(request: Request):
     return Response('Test backend page')
 
 
 @api_view(['GET'])
-def texts(request):
+def texts(request: Request):
     try:
         texts = services.get_texts()
         return Response({'texts': texts})
@@ -24,8 +29,9 @@ def texts(request):
     except services.NoTexts:
         return Response({'display_message': 'Тексты не найдены'}, status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(['POST'])
-def speeches(request):
+def speeches(request: Request):
     speech = request.data["speech"]
     text_id = request.data["text_id"]
     retries = request.data["retries"]
@@ -35,6 +41,28 @@ def speeches(request):
 
 
 @api_view(['POST'])
-def skips(request):
+def skips(request: Request):
     logger.info(f'Skipped text id: {request.data["text_id"]}; retries: {request.data["retries"]}')
     return Response(status=status.HTTP_200_OK)
+
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def user(request: Request):
+    return Response({
+        'data': UserSerializer(request.user).data
+    })
+
+
+@api_view(['POST'])
+def register(request: Request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        create_user = serializer.save()
+        if create_user:
+            token = Token.objects.create(user=create_user)
+            json = serializer.data
+            json['token'] = token.key
+            return Response(json, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
