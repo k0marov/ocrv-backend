@@ -7,7 +7,7 @@ urlpatterns = [
     path('texts/', views.texts),
     path('skips/', views.skips),
     path('speeches/', views.speeches),
-    path('user/', views.user),
     path('register/', views.register),
-    path('login/', views.login)
+    path('login/', views.login),
+    path('logout/', views.logout, {'new_page': ''})
 ]

@@ -8,8 +8,6 @@ from django.utils.translation import gettext_lazy as _
 
 # проверка имени пользователя
 def validate_username(value):
-    print(value)
-    print("_" in value)
     if "_" in value:
         raise ValidationError(
             _("Имя пользователя не должно содержать _"),
@@ -41,10 +39,6 @@ class UserSerializer(ModelSerializer):
         user = User.objects.create_user(validated_data['username'], validated_data['email'],
                                         validated_data['password'])
         return user
-
-    def clean(self):
-        if "_" in self.username:
-            return ValidationError("Имя пользователя не должно содержать _")
 
     class Meta:
         model = User
