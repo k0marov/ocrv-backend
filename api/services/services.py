@@ -25,7 +25,7 @@ def get_texts() -> List[Dict]:
     return texts_list
 
 
-def save_recording(text_id: str, speech: UploadedFile) -> None:
-    filename = text_id + ".mp4"
+def save_recording(user_id: int, text_id: str, speech: UploadedFile) -> None:
+    filename = f'{user_id}_{text_id}.mp4'
     with open(filename) as f:
         FileSystemStorage(location="./recordings/").save(f, speech)

@@ -1,4 +1,4 @@
-from rest_framework.serializers import Serializer, ModelSerializer, CharField, EmailField
+from rest_framework.serializers import Serializer, ModelSerializer, CharField
 from rest_framework.validators import UniqueValidator
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
@@ -21,12 +21,6 @@ class UserSerializer(ModelSerializer):
              'invalid': 'Пожалуйста, введите корректное значения для поля!',
              'min_length': 'Минимальная длина пароля - 8 символов!',
              'max_length': 'Максимальная длина имени пользователя - 32 символа!'}
-    # invalid, invalid_choice
-    email = EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all(), message="Этот Email-адрес уже используется!")],
-        error_messages=e_msg
-    )
     username = CharField(
         max_length=32,
         validators=[UniqueValidator(queryset=User.objects.all(), message="Это имя пользователя уже используется!"),
@@ -36,13 +30,12 @@ class UserSerializer(ModelSerializer):
     password = CharField(min_length=8, write_only=True, error_messages=e_msg)
 
     def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'], validated_data['email'],
-                                        validated_data['password'])
+        user = User.objects.create_user(validated_data['username'], validated_data['password'])
         return user
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'date_joined')
+        fields = ('id', 'username', 'password', 'date_joined')
 
 
 class LoginRequestSerializer(Serializer):

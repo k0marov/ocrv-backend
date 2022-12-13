@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-
+from datetime import timedelta
 from django import core
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -36,12 +36,8 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-      'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
-       'rest_framework.permissions.IsAuthenticated',
-    ],
-    'EXCEPTION_HANDLER': 'api.services.exceptions.custom_exception_handler'
+      'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 CORS_ORIGIN_WHITELIST = (
@@ -62,7 +58,7 @@ INSTALLED_APPS = [
     'api.apps.APIConfig',
     'rest_framework',
     'corsheaders',
-    'rest_framework.authtoken'
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
 MIDDLEWARE = [
@@ -126,11 +122,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Simple JWT Settings
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
+    'SIGNING_KEY': SECRET_KEY,
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'Europe/Moscow'
 
