@@ -31,7 +31,6 @@ def speeches(request: Request):
     serializer = serializers.RecordingSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     rec = serializer.save(user_id=request.user.id)
-
     speech_service.save_recording(rec)
     return Response(status=status.HTTP_200_OK)
 
