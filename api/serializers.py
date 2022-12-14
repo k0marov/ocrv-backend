@@ -14,11 +14,7 @@ class SkipDTOSerializer(serializers.Serializer):
     retries = serializers.IntegerField()
 
     def create(self, validated_data):
-        return texts_service.SkipDTO(
-            user_id=validated_data.get('user_id'),
-            text_id=validated_data.get('text_id'),
-            retries=validated_data.get('retries'),
-        )
+        return texts_service.SkipDTO(**validated_data)
 
 class RecordingSerializer(serializers.Serializer):
     text_id = serializers.CharField()
@@ -27,10 +23,4 @@ class RecordingSerializer(serializers.Serializer):
     retries = serializers.IntegerField()
 
     def create(self, validated_data):
-        return speech_service.Recording(
-            text_id=validated_data.get('text_id'),
-            speech=validated_data.get('speech'),
-            is_video=validated_data.get('is_video'),
-            retries=validated_data.get('retries'),
-            user_id=validated_data.get('user_id'),
-        )
+        return speech_service.Recording(**validated_data)
