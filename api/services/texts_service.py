@@ -2,7 +2,8 @@ import csv
 import dataclasses
 import os
 from typing import List, Optional
-import api_logger
+from django.conf import settings
+from . import api_logger
 
 @dataclasses.dataclass
 class Text:
@@ -23,7 +24,7 @@ class TextsFileNotFound(Exception): pass
 class NoTexts(Exception): pass
 
 def get_texts() -> List[Text]:
-    if not os.path.isfile('./texts.csv'):
+    if not os.path.isfile(str(settings.TEXTS_PATH)):
         raise TextsFileNotFound()
     texts_list = _read_texts()
     if not texts_list:
@@ -32,9 +33,10 @@ def get_texts() -> List[Text]:
 
 def _read_texts() -> List[Text]:
     texts_list = []
-    with open('texts.csv', 'r', encoding='utf-8', newline='') as file:
+    with open(str(settings.TEXTS_PATH), 'r', encoding='utf-8', newline='') as file:
         texts_csv = csv.reader(file, delimiter='\t', skipinitialspace=True)
-        for row in texts_csv[1:]:
+        next(texts_csv) # skip the header raw
+        for row in texts_csv:
             texts_list.append(Text(
                 id=row[0],
                 text=row[1],

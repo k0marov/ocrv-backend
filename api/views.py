@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from rest_framework.decorators import api_view
-import serializers
+from . import serializers
 from api.services import speech_service, texts_service
 
 @api_view(['GET'])
@@ -12,7 +12,7 @@ def texts(request: Request):
         serialized = serializers.TextSerializer(texts, many=True).data
         return Response({'texts': serialized})
     except texts_service.TextsFileNotFound:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({'detail': 'Файл с текстами не найден.'}, status=status.HTTP_404_NOT_FOUND)
     except texts_service.NoTexts:
         return Response({'detail': 'Тексты не найдены'}, status=status.HTTP_404_NOT_FOUND)
 

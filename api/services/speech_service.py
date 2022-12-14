@@ -1,8 +1,9 @@
 import dataclasses
+from django.conf import settings
 
 from django.core.files.uploadedfile import UploadedFile
 
-from api.services import api_logger
+from . import api_logger
 
 VIDEO_EXT = 'mp4'
 AUDIO_EXT = 'wav'
@@ -23,7 +24,8 @@ def save_recording(rec: Recording) -> None:
     api_logger.logger.info(f"Success text id: {rec.text_id}; retries: {rec.retries}; user {rec.user_id}")
 
 def _save_speech_file(filename: str, speech: UploadedFile) -> None:
-    with open(filename, 'wb+') as destination:
+    path = settings.RECORDINGS_DIR / filename
+    with path.open('wb+') as destination:
         for chunk in speech.chunks():
             destination.write(chunk)
 

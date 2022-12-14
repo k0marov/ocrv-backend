@@ -1,5 +1,5 @@
 from api.services import texts_service
-from services import speech_service
+from .services import speech_service
 from rest_framework import serializers
 
 class TextSerializer(serializers.Serializer):
