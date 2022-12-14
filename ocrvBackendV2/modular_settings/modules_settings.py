@@ -1,4 +1,4 @@
-from . import config
+from ocrvBackendV2.modular_settings import config
 from datetime import timedelta
 
 REST_FRAMEWORK = {
