@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 
 from api.serializers import UserSerializer, LoginRequestSerializer, TokenSerializer
-from api.services import services, api_logger
+from api.services import speech_service, texts_service, api_logger
 
 logger = api_logger.get_logger(__name__)
 json_renderer = renderers.JSONRenderer()
@@ -16,11 +16,11 @@ json_renderer = renderers.JSONRenderer()
 @api_view(['GET'])
 def texts(request: Request):
     try:
-        csv_texts = services.get_texts()
+        csv_texts = texts_service.get_texts()
         return Response({'texts': csv_texts})
-    except services.TextsFileNotFound:
+    except texts_service.TextsFileNotFound:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    except services.NoTexts:
+    except texts_service.NoTexts:
         return Response({'detail': 'Тексты не найдены'}, status=status.HTTP_404_NOT_FOUND)
 
 
@@ -29,9 +29,9 @@ def speeches(request: Request):
     speech = request.data["speech"]
     text_id = request.data["text_id"]
     retries = request.data["retries"]
-
+    is_video = request.data["is_video"]
     user_id = request.user.id
-    services.save_recording(user_id, text_id, speech)
+    speech_service.save_recording(user_id, text_id, speech, is_video)
     logger.info(f"Success text id: {text_id}; retries: {retries}")
     return Response(status=status.HTTP_200_OK)
 
