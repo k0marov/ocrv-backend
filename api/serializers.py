@@ -1,5 +1,4 @@
-from api.services import texts_service
-from .services import speech_service
+from .services import text, speech
 from rest_framework import serializers
 
 class TextSerializer(serializers.Serializer):
@@ -14,7 +13,7 @@ class SkipDTOSerializer(serializers.Serializer):
     retries = serializers.IntegerField()
 
     def create(self, validated_data):
-        return texts_service.SkipDTO(**validated_data)
+        return text.SkipDTO(**validated_data)
 
 class RecordingSerializer(serializers.Serializer):
     text_id = serializers.CharField()
@@ -23,4 +22,4 @@ class RecordingSerializer(serializers.Serializer):
     retries = serializers.IntegerField()
 
     def create(self, validated_data):
-        return speech_service.Recording(**validated_data)
+        return speech.Recording(**validated_data)

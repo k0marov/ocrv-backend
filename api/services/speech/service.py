@@ -1,21 +1,12 @@
-import dataclasses
 from django.conf import settings
 
 from django.core.files.uploadedfile import UploadedFile
 
-from . import api_logger
-
-@dataclasses.dataclass
-class Recording:
-    user_id: int
-    text_id: str
-    retries: int
-    speech: UploadedFile
-    is_video: bool
+from . import values
 
 VIDEO_EXT = 'mp4'
 AUDIO_EXT = 'wav'
-def save_recording(rec: Recording) -> None:
+def save_recording(rec: values.Recording) -> None:
     base_filename = f'{rec.user_id}_{rec.text_id}.'
     ext = VIDEO_EXT if rec.is_video else AUDIO_EXT
     filename = base_filename + ext
@@ -26,7 +17,7 @@ def save_recording(rec: Recording) -> None:
         path = _save_audio_from_video(path, base_filename)
     _check_duration(rec.text_id, path)
 
-    api_logger.logger.info(f"Success text id: {rec.text_id}; retries: {rec.retries}; user {rec.user_id}")
+    # api_logger.logger.info(f"Success text id: {rec.text_id}; retries: {rec.retries}; user {rec.user_id}")
 
 def _save_speech_file(filename: str, speech: UploadedFile) -> str:
     path = str(settings.RECORDINGS_DIR / filename)

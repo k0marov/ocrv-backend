@@ -1,29 +1,15 @@
 import csv
-import dataclasses
 import os
-from typing import List, Optional
+from typing import List
+
 from django.conf import settings
-from . import api_logger
 
-@dataclasses.dataclass
-class Text:
-    id: str
-    text: str
-    note: str
-    min_duration: Optional[int] # in seconds
-    max_duration: Optional[int] # in seconds
-
-@dataclasses.dataclass
-class SkipDTO:
-    user_id: int
-    text_id: str
-    retries: int
-
+from . import values
 
 class TextsFileNotFound(Exception): pass
 class NoTexts(Exception): pass
 
-def get_texts() -> List[Text]:
+def get_texts() -> List[values.Text]:
     if not os.path.isfile(str(settings.TEXTS_PATH)):
         raise TextsFileNotFound()
     texts_list = _read_texts()
@@ -31,13 +17,13 @@ def get_texts() -> List[Text]:
         raise NoTexts()
     return texts_list
 
-def _read_texts() -> List[Text]:
+def _read_texts() -> List[values.Text]:
     texts_list = []
     with open(str(settings.TEXTS_PATH), 'r', encoding='utf-8', newline='') as file:
         texts_csv = csv.reader(file, delimiter='\t', skipinitialspace=True)
-        next(texts_csv) # skip the header raw
+        next(texts_csv) # skip the header row
         for row in texts_csv:
-            texts_list.append(Text(
+            texts_list.append(values.Text(
                 id=row[0],
                 text=row[1],
                 note=row[2],
@@ -47,5 +33,6 @@ def _read_texts() -> List[Text]:
     return texts_list
 
 
-def skip_text(skip: SkipDTO) -> None:
-    api_logger.logger.info(f'Skipped text id: {skip.text_id}; retries: {skip.retries}; user: {skip.user_id}')
+def skip_text(skip: values.SkipDTO) -> None:
+    pass
+    # api_logger.logger.info(f'Skipped text id: {skip.text_id}; retries: {skip.retries}; user: {skip.user_id}')
