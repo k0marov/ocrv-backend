@@ -24,7 +24,7 @@ def texts(request: Request):
         return Response({'detail': 'Тексты не найдены'}, status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def speeches(request: Request):
     speech = request.data["speech"]
     text_id = request.data["text_id"]
