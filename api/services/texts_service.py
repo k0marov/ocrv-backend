@@ -1,8 +1,16 @@
 import csv
 import dataclasses
 import os
-from typing import Dict, List
+from typing import List, Optional
 import api_logger
+
+@dataclasses.dataclass
+class Text:
+    id: str
+    text: str
+    note: str
+    min_duration: Optional[int] # in seconds
+    max_duration: Optional[int] # in seconds
 
 @dataclasses.dataclass
 class SkipDTO:
@@ -14,7 +22,7 @@ class SkipDTO:
 class TextsFileNotFound(Exception): pass
 class NoTexts(Exception): pass
 
-def get_texts() -> List[Dict]:
+def get_texts() -> List[Text]:
     if not os.path.isfile('./texts.csv'):
         raise TextsFileNotFound()
     texts_list = _read_texts()
@@ -22,12 +30,18 @@ def get_texts() -> List[Dict]:
         raise NoTexts()
     return texts_list
 
-def _read_texts() -> List[Dict]:
+def _read_texts() -> List[Text]:
     texts_list = []
     with open('texts.csv', 'r', encoding='utf-8', newline='') as file:
         texts_csv = csv.reader(file, delimiter='\t', skipinitialspace=True)
         for row in texts_csv[1:]:
-            texts_list.append({'id': row[0], 'text': row[1], 'note': row[2]})
+            texts_list.append(Text(
+                id=row[0],
+                text=row[1],
+                note=row[2],
+                min_duration=int(row[3]),
+                max_duration=int(row[4]),
+            ))
     return texts_list
 
 
