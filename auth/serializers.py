@@ -6,28 +6,9 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
-# проверка имени пользователя
-def validate_username(value):
-    if "_" in value:
-        raise ValidationError(
-            _("Имя пользователя не должно содержать _"),
-            params={'value': value}
-        )
-
-
 class UserSerializer(ModelSerializer):
-    e_msg = {'null': 'Поле не может иметь значение Null!',
-             'blank': 'Поле не может быть пустым!',
-             'invalid': 'Пожалуйста, введите корректное значения для поля!',
-             'min_length': 'Минимальная длина пароля - 8 символов!',
-             'max_length': 'Максимальная длина имени пользователя - 32 символа!'}
-    username = CharField(
-        max_length=32,
-        validators=[UniqueValidator(queryset=User.objects.all(), message="Это имя пользователя уже используется!"),
-                    validate_username],
-        error_messages=e_msg
-    )
-    password = CharField(min_length=8, write_only=True, error_messages=e_msg)
+    username = CharField(max_length=32)
+    password = CharField(min_length=8, write_only=True)
 
     def create(self, validated_data):
         user = User.objects.create_user(validated_data['username'], validated_data['password'])
@@ -35,7 +16,7 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'date_joined')
+        fields = ('id', 'username', 'password')
 
 
 class LoginRequestSerializer(Serializer):
