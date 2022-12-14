@@ -29,6 +29,7 @@ def speeches(request: Request):
     speech = request.data["speech"]
     text_id = request.data["text_id"]
     retries = request.data["retries"]
+
     user_id = request.user.id
     services.save_recording(user_id, text_id, speech)
     logger.info(f"Success text id: {text_id}; retries: {retries}")
