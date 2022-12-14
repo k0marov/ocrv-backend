@@ -3,12 +3,8 @@ from rest_framework.request import Request
 from rest_framework import renderers, status
 from rest_framework.decorators import api_view
 
-from serializers import RecordingSerializer
+import serializers
 from api.services import speech_service, texts_service, api_logger
-
-logger = api_logger.get_logger(__name__)
-json_renderer = renderers.JSONRenderer()
-
 
 @api_view(['GET'])
 def texts(request: Request):
@@ -23,14 +19,14 @@ def texts(request: Request):
 
 @api_view(['POST'])
 def speeches(request: Request):
-    rec = RecordingSerializer(data=request.data).save(user_id=request.user.id)
+    rec = serializers.RecordingSerializer(data=request.data).save(user_id=request.user.id)
     speech_service.save_recording(rec)
-    logger.info(f"Success text id: {rec.text_id}; retries: {rec.retries}")
     return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
 def skips(request: Request):
-    logger.info(f'Skipped text id: {request.data["text_id"]}; retries: {request.data["retries"]}')
+    skip = serializers.SkipDTOSerializer(data=request.data).save(user_id=request.user.id)
+    texts_service.skip_text(skip)
     return Response(status=status.HTTP_200_OK)
 

@@ -23,3 +23,5 @@ def get_logger(name):
     logger.addHandler(_get_file_handler())
     logger.addHandler(_get_stream_handler())
     return logger
+
+logger = api_logger.get_logger(__name__)
