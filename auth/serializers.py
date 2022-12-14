@@ -1,9 +1,6 @@
 from rest_framework.serializers import Serializer, ModelSerializer, CharField
-from rest_framework.validators import UniqueValidator
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
 
 
 class UserSerializer(ModelSerializer):

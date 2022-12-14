@@ -18,14 +18,20 @@ def texts(request: Request):
 
 @api_view(['POST'])
 def skips(request: Request):
-    skip = serializers.SkipDTOSerializer(data=request.data).save(user_id=request.user.id)
+    print(request.data)
+    serializer = serializers.SkipDTOSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    skip = serializer.save(user_id=request.user.id)
     texts_service.skip_text(skip)
     return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
 def speeches(request: Request):
-    rec = serializers.RecordingSerializer(data=request.data).save(user_id=request.user.id)
+    serializer = serializers.RecordingSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    rec = serializer.save(user_id=request.user.id)
+
     speech_service.save_recording(rec)
     return Response(status=status.HTTP_200_OK)
 
