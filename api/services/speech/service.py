@@ -30,9 +30,9 @@ def save_recording(rec: values.Recording) -> None:
 
     path = _save_speech_file(filename, rec.speech)
     if rec.is_video:
-        # also overrides the path to point to the audio file
-        path = _save_audio_from_video(path, base_filename)
+        _save_audio_from_video(path, base_filename)
     _check_duration(rec.text_id, path)
+    # there is no need to delete the created files in case of an error since they will be overridden by a future request
     log.log_success(rec)
 
 
@@ -43,7 +43,7 @@ def _save_speech_file(filename: str, speech: UploadedFile) -> pathlib.Path:
             destination.write(chunk)
     return path
 
-def _save_audio_from_video(video_path: pathlib.Path, base_filename: str) -> pathlib.Path:
+def _save_audio_from_video(video_path: pathlib.Path, base_filename: str) -> None:
     audio_filename = base_filename + AUDIO_EXT
     audio_path = video_path.parent / audio_filename
     (
@@ -53,14 +53,16 @@ def _save_audio_from_video(video_path: pathlib.Path, base_filename: str) -> path
         .output(str(audio_path))
         .run()
     )
-    return audio_path
 
 def _check_duration(text_id: str, media_path: pathlib.Path) -> None:
     text = find_text(text_id)
     if text is None: raise TextNotFound()
-    meta = ffmpeg.probe(media_path)
-    duration = float(meta['streams'][0]['duration'])
+    duration = _get_duration(media_path)
     if text.min_duration and duration < text.min_duration:
         raise MinDurationException(got=math.floor(duration), want=text.min_duration)
     elif text.max_duration and duration > text.max_duration:
         raise MaxDurationException(got=math.ceil(duration), want=text.max_duration)
+
+def _get_duration(media_path) -> float:
+    meta = ffmpeg.probe(media_path)
+    duration = float(meta['streams'][0]['duration'])
