@@ -74,6 +74,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-STATIC_URL = 'static/'
+# STATIC_URL is defined in config.py and is already exported to the settings
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
