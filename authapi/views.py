@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 
-from auth.serializers import UserSerializer, LoginRequestSerializer, TokenSerializer
+from authapi.serializers import UserSerializer, LoginRequestSerializer, TokenSerializer
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

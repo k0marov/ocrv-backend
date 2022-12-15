@@ -12,6 +12,7 @@ class TextsFileNotFound(Exception): pass
 class NoTexts(Exception): pass
 
 def get_texts() -> List[values.Text]:
+    print(str(settings.TEXTS_PATH))
     if not os.path.isfile(str(settings.TEXTS_PATH)):
         raise TextsFileNotFound()
     texts_list = _read_texts()

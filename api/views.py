@@ -11,7 +11,7 @@ def texts(request: Request):
     try:
         texts = text.get_texts()
         serialized = serializers.TextSerializer(texts, many=True).data
-        return Response({'text': serialized})
+        return Response({'texts': serialized})
     except text.TextsFileNotFound:
         return Response({'detail': 'Файл с текстами не найден.'}, status=status.HTTP_404_NOT_FOUND)
     except text.NoTexts:
@@ -28,6 +28,7 @@ def skips(request: Request):
 
 @api_view(['POST'])
 def speeches(request: Request):
+    print(request.data)
     serializer = serializers.RecordingSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     rec = serializer.save(user_id=request.user.id)

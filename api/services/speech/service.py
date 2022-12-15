@@ -1,3 +1,6 @@
+import pathlib
+
+import ffmpeg
 from django.conf import settings
 
 from django.core.files.uploadedfile import UploadedFile
@@ -8,6 +11,7 @@ from .. import logging_helpers
 VIDEO_EXT = 'mp4'
 AUDIO_EXT = 'wav'
 def save_recording(rec: values.Recording) -> None:
+    print(rec.is_video)
     base_filename = f'{rec.user_id}_{rec.text_id}.'
     ext = VIDEO_EXT if rec.is_video else AUDIO_EXT
     filename = base_filename + ext
@@ -20,16 +24,25 @@ def save_recording(rec: values.Recording) -> None:
     logging_helpers.log_success(rec)
 
 
-def _save_speech_file(filename: str, speech: UploadedFile) -> str:
-    path = str(settings.RECORDINGS_DIR / filename)
-    with open(path, 'wb+') as destination:
+def _save_speech_file(filename: str, speech: UploadedFile) -> pathlib.Path:
+    path = settings.RECORDINGS_DIR / filename
+    with path.open('wb+') as destination:
         for chunk in speech.chunks():
             destination.write(chunk)
     return path
 
-def _save_audio_from_video(video_path: str, base_filename: str) -> str:
-    pass
+def _save_audio_from_video(video_path: pathlib.Path, base_filename: str) -> pathlib.Path:
+    audio_filename = base_filename + AUDIO_EXT
+    audio_path = video_path.parent / audio_filename
+    print(audio_path)
+    (
+        ffmpeg
+        .input(str(video_path))
+        .output(str(audio_path))
+        .run()
+    )
+    return audio_path
 
-def _check_duration(text_id: str, audio_path: str) -> None:
+def _check_duration(text_id: str, audio_path: pathlib.Path) -> None:
     pass
 
