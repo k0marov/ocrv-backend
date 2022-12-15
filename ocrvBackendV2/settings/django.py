@@ -16,7 +16,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     'api',
-    'authapi',
+    'simpleauth',
 ]
 
 MIDDLEWARE = [
