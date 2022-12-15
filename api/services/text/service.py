@@ -5,6 +5,8 @@ from typing import List
 from django.conf import settings
 
 from . import values
+from .. import logging_helpers
+
 
 class TextsFileNotFound(Exception): pass
 class NoTexts(Exception): pass
@@ -34,5 +36,4 @@ def _read_texts() -> List[values.Text]:
 
 
 def skip_text(skip: values.SkipDTO) -> None:
-    pass
-    # api_logger.logger.info(f'Skipped text id: {skip.text_id}; retries: {skip.retries}; user: {skip.user_id}')
+    logging_helpers.log_skip(skip)

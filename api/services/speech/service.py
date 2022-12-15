@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core.files.uploadedfile import UploadedFile
 
 from . import values
+from .. import logging_helpers
 
 VIDEO_EXT = 'mp4'
 AUDIO_EXT = 'wav'
@@ -16,8 +17,8 @@ def save_recording(rec: values.Recording) -> None:
         # also overrides the path to point to the audio file
         path = _save_audio_from_video(path, base_filename)
     _check_duration(rec.text_id, path)
+    logging_helpers.log_success(rec)
 
-    # api_logger.logger.info(f"Success text id: {rec.text_id}; retries: {rec.retries}; user {rec.user_id}")
 
 def _save_speech_file(filename: str, speech: UploadedFile) -> str:
     path = str(settings.RECORDINGS_DIR / filename)
