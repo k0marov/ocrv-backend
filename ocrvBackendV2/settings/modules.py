@@ -1,5 +1,10 @@
-from ocrvBackendV2.modular_settings import config
+from ocrvBackendV2.settings import config
 from datetime import timedelta
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'https://ocrv.skomarov.com',
+)
 
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
@@ -12,11 +17,6 @@ REST_FRAMEWORK = {
     )
 }
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    'https://ocrv.skomarov.com',
-)
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
@@ -25,4 +25,9 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True
 }
 
+# ===== Localization and Internationalization =====
+LANGUAGE_CODE = 'ru-ru'
+TIME_ZONE = 'Europe/Moscow'
+USE_I18N = True
+USE_TZ = True
 
