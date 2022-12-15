@@ -31,8 +31,14 @@ def save_recording(rec: values.Recording) -> None:
     path = _save_speech_file(filename, rec.speech)
     if rec.is_video:
         _save_audio_from_video(path, base_filename)
-    _check_duration(rec.text_id, path)
+
     # there is no need to delete the created files in case of an error since they will be overridden by a future request
+    try:
+        _check_duration(rec.text_id, path)
+    except MinDurationException as e:
+        log.log_min_duration_exception(rec, e)
+    except MaxDurationException as e:
+        log.log_max_duration_exception(rec, e)
     log.log_success(rec)
 
 
