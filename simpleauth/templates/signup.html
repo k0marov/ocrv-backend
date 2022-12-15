@@ -1,0 +1,27 @@
+{% extends 'base_generic.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'login.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'colors.css' %}" type="text/css">
+<title>Регистрация</title>
+{% endblock %}
+
+{% block content %}
+    <main>
+        {% for field in form %}
+            {% for error in field.errors %}
+                <h1>{{error}}</h1>
+            {% endfor %}
+        {% endfor %}
+        <form method="post">
+            {% csrf_token %}
+            <h2>Регистрация</h2>
+            <input autocapitalize="off" name="username" required placeholder="Логин">
+            <input name="password1" type="password" required placeholder="Пароль">
+            <input name="password2" type="password" required placeholder="Повтор пароля">
+            <button type="submit">Зарегистрироваться</button>
+            <p>Уже есть аккаунт?</p>
+            <a href={% url 'login' %}>Войти</a>
+        </form>
+{% endblock %}
