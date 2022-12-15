@@ -65,4 +65,4 @@ def _check_duration(text_id: str, media_path: pathlib.Path) -> None:
 
 def _get_duration(media_path) -> float:
     meta = ffmpeg.probe(media_path)
-    duration = float(meta['streams'][0]['duration'])
+    return float(meta['streams'][0]['duration'])
