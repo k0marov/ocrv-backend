@@ -1,4 +1,3 @@
-import dataclasses
 import math
 import pathlib
 
@@ -8,18 +7,9 @@ from django.conf import settings
 from django.core.files.uploadedfile import UploadedFile
 
 from . import values, log
-from ..text import get_texts, find_text, TextNotFound
+from .exceptions import MinDurationException, MaxDurationException
+from ..text import find_text, TextNotFound
 
-
-@dataclasses.dataclass
-class MinDurationException(Exception):
-    got: int
-    want: int
-
-@dataclasses.dataclass
-class MaxDurationException(Exception):
-    got: int
-    want: int
 
 VIDEO_EXT = 'mp4'
 AUDIO_EXT = 'wav'

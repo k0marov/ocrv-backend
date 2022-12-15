@@ -1,4 +1,5 @@
-from api.services.speech import Recording, MinDurationException, MaxDurationException
+from .values import Recording
+from .exceptions import MinDurationException, MaxDurationException
 from common.logger import logger
 
 def log_success(rec: Recording):

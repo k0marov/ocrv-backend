@@ -5,11 +5,8 @@ from typing import List, Optional
 from django.conf import settings
 
 from . import values, log
+from .exceptions import TextsFileNotFound, NoTexts
 
-
-class TextsFileNotFound(Exception): pass
-class NoTexts(Exception): pass
-class TextNotFound(Exception): pass
 
 def get_texts() -> List[values.Text]:
     if not os.path.isfile(str(settings.TEXTS_PATH)):
