@@ -1,4 +1,9 @@
 from pathlib import Path
+
+from django.urls import reverse_lazy
+
+LOGIN_URL = reverse_lazy('login')
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = True
@@ -11,12 +16,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'corsheaders',
-    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework.authtoken',
     'api',
-    'simpleauth',
+    'authapi',
 ]
 
 MIDDLEWARE = [
@@ -27,7 +29,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'ocrvBackendV2.urls'
@@ -58,7 +59,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -73,7 +73,5 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-# STATIC_URL is defined in config.py and is already exported to the settings
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
