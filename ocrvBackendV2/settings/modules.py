@@ -1,5 +1,8 @@
+from . import config
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    config.FRONTEND_URL,
 ]
 CORS_ALLOW_CREDENTIALS = True
 
