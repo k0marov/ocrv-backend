@@ -26,7 +26,7 @@ def save_recording(rec: values.Recording) -> None:
 def _save_speech_file(rec: values.Recording, base_filename: str) -> pathlib.Path:
     filename = base_filename + (VIDEO_EXT if rec.is_video else AUDIO_EXT)
     path = settings.RECORDINGS_DIR / filename
-    tmp_path = settings.RECORDINGS_DIR / (str(uuid.uuid4()) + filename)
+    tmp_path = settings.RECORDINGS_DIR / ("tmp_" + filename)
 
     media.encode_and_save(rec.speech, str(tmp_path), str(path))
     return path
@@ -41,10 +41,10 @@ def _validate_duration_and_log(rec: values.Recording, path: pathlib.Path):
         validate_duration(rec.text_id, path)
     except MinDurationException as e:
         log.log_min_duration_exception(rec, e)
-        raise e;
+        raise e
     except MaxDurationException as e:
         log.log_max_duration_exception(rec, e)
-        raise e;
+        raise e
 
 def validate_duration(text_id: str, media_path: pathlib.Path) -> None:
     text = find_text(text_id)
