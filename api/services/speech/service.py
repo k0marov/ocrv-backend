@@ -41,13 +41,16 @@ def _validate_duration_and_log(rec: values.Recording, path: pathlib.Path):
         validate_duration(rec.text_id, path)
     except MinDurationException as e:
         log.log_min_duration_exception(rec, e)
+        raise e;
     except MaxDurationException as e:
         log.log_max_duration_exception(rec, e)
+        raise e;
 
 def validate_duration(text_id: str, media_path: pathlib.Path) -> None:
     text = find_text(text_id)
     if text is None: raise TextNotFound()
     duration = media.get_duration(str(media_path))
+    print(duration)
     if text.min_duration and duration < text.min_duration:
         raise MinDurationException(got=math.floor(duration), want=text.min_duration)
     elif text.max_duration and duration > text.max_duration:
