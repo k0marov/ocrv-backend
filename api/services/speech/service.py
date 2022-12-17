@@ -1,4 +1,5 @@
 import math
+import os
 import pathlib
 
 import ffmpeg
@@ -22,7 +23,7 @@ def save_recording(rec: values.Recording) -> None:
     if rec.is_video:
         _save_audio_from_video(path, base_filename)
 
-    # there is no need to delete the created files in case of an error since they will be overridden by a future request
+    # there is no need to delete the created files in case of an exception since they will be overridden by a future request
     try:
         _check_duration(rec.text_id, path)
     except MinDurationException as e:
@@ -33,11 +34,19 @@ def save_recording(rec: values.Recording) -> None:
 
 
 def _save_speech_file(filename: str, speech: UploadedFile) -> pathlib.Path:
+    raw_path = settings.RECORDINGS_DIR / ("raw_"+filename)
     path = settings.RECORDINGS_DIR / filename
-    with path.open('wb+') as destination:
+    with open(str(raw_path), 'wb+') as destination:
         for chunk in speech.chunks():
             destination.write(chunk)
+
+    _re_encode(str(raw_path), str(path))
+    os.remove(str(raw_path))
+
     return path
+
+def _re_encode(raw_path: str, path: str):
+    ffmpeg.input(raw_path).output(path).run()
 
 def _save_audio_from_video(video_path: pathlib.Path, base_filename: str) -> None:
     audio_filename = base_filename + AUDIO_EXT
@@ -61,4 +70,6 @@ def _check_duration(text_id: str, media_path: pathlib.Path) -> None:
 
 def _get_duration(media_path) -> float:
     meta = ffmpeg.probe(media_path)
-    return float(meta['streams'][0]['duration'])
+    stream = meta['streams'][0]
+    print(stream)
+    return float(stream['duration'])
