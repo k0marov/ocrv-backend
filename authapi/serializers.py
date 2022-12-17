@@ -1,11 +1,21 @@
 from django.contrib.auth.models import User
-from django.contrib.auth.password_validation import validate_password
-from rest_framework.serializers import ModelSerializer
+from django.contrib.auth import password_validation
+from django.core import exceptions
+from rest_framework import serializers
 
 
-class SignUpSerializer(ModelSerializer):
+class SignUpSerializer(serializers.ModelSerializer):
     def validate(self, data):
-        validate_password(data.get('password'))
+        errors = dict()
+        try:
+            password_validation.validate_password(password=data.get('password'))
+        # the default django ValidationError, not the drf one
+        except exceptions.ValidationError as e:
+            errors['password'] = list(e.messages)
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
         return data
 
     def create(self, validated_data):

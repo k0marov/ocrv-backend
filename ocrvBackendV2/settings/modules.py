@@ -1,3 +1,8 @@
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+CORS_ALLOW_CREDENTIALS = True
+
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
@@ -11,14 +16,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     )
 }
-
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
-#     'SIGNING_KEY': config.SECRET_KEY,
-#     'ROTATE_REFRESH_TOKENS': True,
-#     'BLACKLIST_AFTER_ROTATION': True
-# }
 
 # ===== Localization and Internationalization =====
 LANGUAGE_CODE = 'ru-ru'
