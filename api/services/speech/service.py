@@ -1,13 +1,11 @@
 import math
 import os
 import pathlib
+import uuid
 
-import ffmpeg
 from django.conf import settings
 
-from django.core.files.uploadedfile import UploadedFile
-
-from . import values, log
+from . import values, log, media
 from .exceptions import MinDurationException, MaxDurationException
 from ..text import find_text, TextNotFound
 
@@ -16,60 +14,42 @@ VIDEO_EXT = 'mp4'
 AUDIO_EXT = 'wav'
 def save_recording(rec: values.Recording) -> None:
     base_filename = f'{rec.user_id}_{rec.text_id}.'
-    ext = VIDEO_EXT if rec.is_video else AUDIO_EXT
-    filename = base_filename + ext
 
-    path = _save_speech_file(filename, rec.speech)
+    path = _save_speech_file(rec, base_filename)
+    # there is no need to delete the created files in case of an exception since they will be overridden by a future request
+    _validate_duration_and_log(rec, path)
     if rec.is_video:
         _save_audio_from_video(path, base_filename)
 
-    # there is no need to delete the created files in case of an exception since they will be overridden by a future request
-    try:
-        _check_duration(rec.text_id, path)
-    except MinDurationException as e:
-        log.log_min_duration_exception(rec, e)
-    except MaxDurationException as e:
-        log.log_max_duration_exception(rec, e)
     log.log_success(rec)
 
-
-def _save_speech_file(filename: str, speech: UploadedFile) -> pathlib.Path:
-    raw_path = settings.RECORDINGS_DIR / ("raw_"+filename)
+def _save_speech_file(rec: values.Recording, base_filename: str) -> pathlib.Path:
+    filename = base_filename + (VIDEO_EXT if rec.is_video else AUDIO_EXT)
     path = settings.RECORDINGS_DIR / filename
-    with open(str(raw_path), 'wb+') as destination:
-        for chunk in speech.chunks():
-            destination.write(chunk)
+    tmp_path = settings.RECORDINGS_DIR / (str(uuid.uuid4()) + filename)
 
-    _re_encode(str(raw_path), str(path))
-    os.remove(str(raw_path))
-
+    media.encode_and_save(rec.speech, str(tmp_path), str(path))
     return path
-
-def _re_encode(raw_path: str, path: str):
-    ffmpeg.input(raw_path).output(path).run()
 
 def _save_audio_from_video(video_path: pathlib.Path, base_filename: str) -> None:
     audio_filename = base_filename + AUDIO_EXT
     audio_path = video_path.parent / audio_filename
-    (
-        ffmpeg
-        .overwrite_output()
-        .input(str(video_path))
-        .output(str(audio_path))
-        .run()
-    )
+    media.extract_audio(str(video_path), str(audio_path))
 
-def _check_duration(text_id: str, media_path: pathlib.Path) -> None:
+def _validate_duration_and_log(rec: values.Recording, path: pathlib.Path):
+    try:
+        validate_duration(rec.text_id, path)
+    except MinDurationException as e:
+        log.log_min_duration_exception(rec, e)
+    except MaxDurationException as e:
+        log.log_max_duration_exception(rec, e)
+
+def validate_duration(text_id: str, media_path: pathlib.Path) -> None:
     text = find_text(text_id)
     if text is None: raise TextNotFound()
-    duration = _get_duration(media_path)
+    duration = media.get_duration(str(media_path))
     if text.min_duration and duration < text.min_duration:
         raise MinDurationException(got=math.floor(duration), want=text.min_duration)
     elif text.max_duration and duration > text.max_duration:
         raise MaxDurationException(got=math.ceil(duration), want=text.max_duration)
 
-def _get_duration(media_path) -> float:
-    meta = ffmpeg.probe(media_path)
-    stream = meta['streams'][0]
-    print(stream)
-    return float(stream['duration'])
