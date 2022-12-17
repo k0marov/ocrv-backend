@@ -1,4 +1,4 @@
-from . import config
+from . import config, django
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -21,7 +21,7 @@ REST_FRAMEWORK = {
 }
 
 # ===== Localization and Internationalization =====
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
