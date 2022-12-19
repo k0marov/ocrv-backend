@@ -1,5 +1,5 @@
-from .values import Recording
-from .exceptions import MinDurationException, MaxDurationException
+from api.features.speech.domain.values import Recording
+from api.features.speech.domain.exceptions import MinDurationException, MaxDurationException
 from common.logger import logger
 
 def log_success(rec: Recording):

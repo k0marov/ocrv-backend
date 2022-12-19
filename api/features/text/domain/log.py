@@ -1,4 +1,4 @@
-from api.services.text import SkipDTO
+from api.features.text import SkipDTO
 from common.logger import logger
 
 

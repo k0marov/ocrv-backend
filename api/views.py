@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from common.exceptions import error_response
 from common.time import format_duration
 from . import serializers
-from .services import text, speech
+from .features import text, speech
 
 
 @api_view(['GET'])

@@ -1,4 +1,4 @@
-from .services import text, speech
+from .features import text, speech
 from rest_framework import serializers
 
 class TextSerializer(serializers.Serializer):
