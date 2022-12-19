@@ -11,7 +11,7 @@ from .services import text, speech
 
 @api_view(['GET'])
 def texts(request: Request):
-    texts = text.get_texts()
+    texts = text.get_texts(str(request.user.id))
     serialized = serializers.TextSerializer(texts, many=True).data
     return Response({'texts': serialized})
 

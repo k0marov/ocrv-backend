@@ -5,6 +5,7 @@ class TextSerializer(serializers.Serializer):
     id = serializers.CharField()
     text = serializers.CharField()
     note = serializers.CharField()
+    completed = serializers.BooleanField()
     min_duration = serializers.IntegerField(required=False)
     max_duration = serializers.IntegerField(required=False)
 

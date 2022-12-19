@@ -1,12 +1,12 @@
 import dataclasses
-from typing import List, Optional
+
+from . import models
+
+
 @dataclasses.dataclass
 class Text:
-    id: str
-    text: str
-    note: str
-    min_duration: Optional[int] # in seconds
-    max_duration: Optional[int] # in seconds
+    model: models.TextModel
+    completed_by_caller: bool
 
 @dataclasses.dataclass
 class SkipDTO:
