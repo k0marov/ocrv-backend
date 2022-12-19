@@ -13,19 +13,19 @@ from .features.texts.external.store import TextsStoreImpl
 
 @dataclasses.dataclass
 class APIDependencies:
-    text: TextsService
-    speech: SpeechesService
+    texts: TextsService
+    speeches: SpeechesService
 
 
 def initialize() -> APIDependencies:
     paths = PathsConfig(texts_path=settings.TEXTS_PATH, recordings_dir=settings.RECORDINGS_DIR)
     filepaths = FilepathsServiceImpl(paths)
-    text = TextsServiceImpl(filepaths, TextsStoreImpl(settings.TEXTS_PATH))
+    text = TextsServiceImpl(filepaths, TextsStoreImpl(filepaths))
     media = MediaEncoderImpl()
     speech = SpeechesServiceImpl(filepaths, media, DurationValidator(text, media))
     return APIDependencies(
-        text=text,
-        speech=speech,
+        texts=text,
+        speeches=speech,
     )
 
 

@@ -1,6 +1,6 @@
 import dataclasses
 
-from api.features.texts import models
+from .external import models
 
 
 @dataclasses.dataclass

@@ -1,23 +1,24 @@
-from .features import texts, speeches
 from rest_framework import serializers
 
 from .features.filepaths.domain.values import RecordingMeta
+from .features.texts.domain.values import SkipDTO
+from .features.speeches.domain.values import Recording
 
 
 class TextSerializer(serializers.Serializer):
-    id = serializers.CharField()
-    text = serializers.CharField()
-    note = serializers.CharField()
-    completed = serializers.BooleanField()
-    min_duration = serializers.IntegerField(required=False)
-    max_duration = serializers.IntegerField(required=False)
+    id = serializers.CharField(source='model.id')
+    text = serializers.CharField(source='model.text')
+    note = serializers.CharField(source='model.note')
+    completed = serializers.BooleanField(source='completed_by_caller')
+    min_duration = serializers.IntegerField(source='model.min_duration', required=False)
+    max_duration = serializers.IntegerField(source='model.max_duration', required=False)
 
 class SkipDTOSerializer(serializers.Serializer):
     text_id = serializers.CharField()
     retries = serializers.IntegerField()
 
     def create(self, validated_data):
-        return texts.SkipDTO(**validated_data)
+        return SkipDTO(**validated_data)
 
 class RecordingSerializer(serializers.Serializer):
     """
@@ -32,12 +33,12 @@ class RecordingSerializer(serializers.Serializer):
     retries = serializers.IntegerField()
 
     def create(self, validated_data):
-        return speeches.Recording(
+        return Recording(
             meta=RecordingMeta(
                 text_id=validated_data.get('text_id'),
                 is_video=validated_data.get('is_video'),
                 by_user_id=validated_data.get('by_user_id'),
             ),
             retries=validated_data.get('retries'),
-            tmp_blob_path=validated_data.get('speeches').temporary_file_path(),
+            tmp_blob_path=validated_data.get('speech').temporary_file_path(),
         )

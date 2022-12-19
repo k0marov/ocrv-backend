@@ -11,7 +11,7 @@ from .features import texts, speeches
 
 
 @api_view(['GET'])
-def texts(request: Request):
+def get_texts(request: Request):
     texts = deps.texts.get_texts(str(request.user.id))
     serialized = serializers.TextSerializer(texts, many=True).data
     return Response({'texts': serialized})
@@ -26,10 +26,10 @@ def skips(request: Request):
 
 
 @api_view(['POST'])
-def speeches(request: Request):
+def post_speech(request: Request):
     serializer = serializers.RecordingSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    rec = serializer.save(user_id=str(request.user.id))
+    rec = serializer.save(by_user_id=str(request.user.id))
     # TODO: factor out the error handling
     try:
         deps.speeches.save_recording(rec)
