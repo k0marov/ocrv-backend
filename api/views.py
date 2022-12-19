@@ -28,7 +28,7 @@ def skips(request: Request):
 def speeches(request: Request):
     serializer = serializers.RecordingSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    rec = serializer.save(user_id=request.user.id)
+    rec = serializer.save(user_id=str(request.user.id))
     # TODO: factor out the error handling
     try:
         speech.save_recording(rec)

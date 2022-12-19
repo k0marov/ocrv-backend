@@ -15,7 +15,7 @@ from ..text import find_text, TextNotFound
 VIDEO_EXT = 'mp4'
 AUDIO_EXT = 'wav'
 def save_recording(rec: values.Recording) -> None:
-    base_filename = f'{rec.user_id}_{rec.text_id}.'
+    base_filename = _get_base_filename(rec.user_id, rec.text_id)
 
     paths = []
     try:
@@ -29,6 +29,13 @@ def save_recording(rec: values.Recording) -> None:
         map(os.remove, paths)
         raise e
 
+def has_recorded(user_id: str, text_id: str) -> bool:
+    filename = _get_base_filename(user_id, text_id) + AUDIO_EXT
+    path = settings.RECORDINGS_DIR / filename
+    return os.path.exists(path)
+
+def _get_base_filename(user_id: str, text_id: str) -> str:
+    return f'{user_id}_{text_id}.'
 
 def _save_speech_file(rec: values.Recording, base_filename: str) -> pathlib.Path:
     filename = base_filename + (VIDEO_EXT if rec.is_video else AUDIO_EXT)

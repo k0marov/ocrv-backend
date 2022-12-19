@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import UploadedFile
 
 @dataclasses.dataclass
 class Recording:
-    user_id: int
+    user_id: str
     text_id: str
     retries: int
     speech: UploadedFile
