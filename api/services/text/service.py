@@ -36,11 +36,14 @@ def _read_texts() -> List[values.Text]:
     return texts_list
 
 def _decode_csv_text(csv_row: List[str]) -> values.Text:
+    min_duration = int(csv_row[3])
+    max_duration = int(csv_row[4])
+
     return values.Text(
         id=csv_row[0],
         text=csv_row[1],
         note=csv_row[2],
-        min_duration=int(csv_row[3]),
-        max_duration=int(csv_row[4]),
+        min_duration=min_duration if min_duration else None,
+        max_duration=max_duration if max_duration else None,
     )
 
