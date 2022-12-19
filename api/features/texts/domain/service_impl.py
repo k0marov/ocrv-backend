@@ -1,14 +1,14 @@
 from typing import Optional, List
 
 from api.features.filepaths.domain.service import FilepathsService
-from api.features.text import TextService, NoTexts
-from api.features.text.domain import values, log
-from api.features.text.domain.external import models
-from api.features.text.domain.external.store import TextStore
+from api.features.texts import TextsService, NoTexts
+from api.features.texts.domain import values, log
+from api.features.texts.domain.external import models
+from api.features.texts.domain.external.store import TextsStore
 
 
-class TextServiceImpl(TextService):
-    def __init__(self, filepaths: FilepathsService,  store: TextStore):
+class TextsServiceImpl(TextsService):
+    def __init__(self, filepaths: FilepathsService, store: TextsStore):
         self._filepaths = filepaths
         self._store = store
 

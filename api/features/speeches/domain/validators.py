@@ -2,12 +2,12 @@ import math
 
 from . import exceptions, log, values
 from .external.mediaencoder import MediaEncoder
-from ... import text
-from ...text import TextNotFound
+from ... import texts
+from ...texts import TextNotFound
 
 
 class DurationValidator:
-    def __init__(self, text: text.TextService, media: MediaEncoder):
+    def __init__(self, text: texts.TextsService, media: MediaEncoder):
         self._text = text
         self._media = media
 

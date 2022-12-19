@@ -1,9 +1,9 @@
 import abc
 from typing import List
 
-from api.features.text.domain.external import models
+from api.features.texts.domain.external import models
 
 
-class TextStore(abc.ABC):
+class TextsStore(abc.ABC):
     @abc.abstractmethod
     def get_texts(self) -> List[models.TextModel]: pass

@@ -2,11 +2,11 @@ import csv
 from typing import List
 
 from api.features.filepaths.domain.service import FilepathsService
-from api.features.text.domain.external import models
-from api.features.text.domain.external.store import TextStore
+from api.features.texts.domain.external import models
+from api.features.texts.domain.external.store import TextsStore
 
 
-class TextStoreImpl(TextStore):
+class TextsStoreImpl(TextsStore):
     def __init__(self, filepaths: FilepathsService):
         self._filepaths = filepaths
 

@@ -1,4 +1,4 @@
-from .features import text, speech
+from .features import texts, speeches
 from rest_framework import serializers
 
 from .features.filepaths.domain.values import RecordingMeta
@@ -17,13 +17,13 @@ class SkipDTOSerializer(serializers.Serializer):
     retries = serializers.IntegerField()
 
     def create(self, validated_data):
-        return text.SkipDTO(**validated_data)
+        return texts.SkipDTO(**validated_data)
 
 class RecordingSerializer(serializers.Serializer):
     """
     by_user_id must be passed in as a context argument when deserializing
 
-    The speech file must always be a TemporaryUploadedFile and NOT InMemoryUploadedFile.
+    The speeches file must always be a TemporaryUploadedFile and NOT InMemoryUploadedFile.
     This can be ensured by setting FILE_UPLOAD_MAX_MEMORY_SIZE to 0
     """
     text_id = serializers.CharField()
@@ -32,12 +32,12 @@ class RecordingSerializer(serializers.Serializer):
     retries = serializers.IntegerField()
 
     def create(self, validated_data):
-        return speech.Recording(
+        return speeches.Recording(
             meta=RecordingMeta(
                 text_id=validated_data.get('text_id'),
                 is_video=validated_data.get('is_video'),
                 by_user_id=validated_data.get('by_user_id'),
             ),
             retries=validated_data.get('retries'),
-            tmp_blob_path=validated_data.get('speech').temporary_file_path(),
+            tmp_blob_path=validated_data.get('speeches').temporary_file_path(),
         )

@@ -1,11 +1,11 @@
 import os
-from .service import SpeechService
+from .service import SpeechesService
 from . import values, log, validators
-from api.features.speech.domain.external.mediaencoder import MediaEncoder
+from api.features.speeches.domain.external.mediaencoder import MediaEncoder
 from ...filepaths.domain.service import FilepathsService
 from ...filepaths.domain.values import RecordingPaths
 
-class SpeechServiceImpl(SpeechService):
+class SpeechesServiceImpl(SpeechesService):
     def __init__(self, filepaths: FilepathsService, media: MediaEncoder, validator: validators.DurationValidator):
         self._filepaths = filepaths
         self._media = media
