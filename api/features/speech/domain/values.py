@@ -1,13 +1,10 @@
 import dataclasses
 
-from django.core.files.uploadedfile import UploadedFile
-
+from api.features.filepaths.domain.values import RecordingMeta
 
 @dataclasses.dataclass
 class Recording:
-    user_id: str
-    text_id: str
+    meta: RecordingMeta
+    tmp_blob_path: str
     retries: int
-    speech: UploadedFile
-    is_video: bool
 

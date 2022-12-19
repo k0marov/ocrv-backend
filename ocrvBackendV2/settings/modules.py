@@ -1,4 +1,4 @@
-from . import config, django
+from . import config
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
