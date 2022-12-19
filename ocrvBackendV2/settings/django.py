@@ -2,6 +2,11 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+# this makes sure that UploadedFile is always TemporaryUploadedFile,
+# which is convenient in this use case, since ffmpeg only accepts filenames as input
+# and we can use the temporary_file_path() from TemporaryUploadedFile for it
+FILE_UPLOAD_MAX_MEMORY_SIZE = 0
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
