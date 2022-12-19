@@ -17,7 +17,7 @@ class APIDependencies:
     speech: SpeechesService
 
 
-def initialize():
+def initialize() -> APIDependencies:
     paths = PathsConfig(texts_path=settings.TEXTS_PATH, recordings_dir=settings.RECORDINGS_DIR)
     filepaths = FilepathsServiceImpl(paths)
     text = TextsServiceImpl(filepaths, TextsStoreImpl(settings.TEXTS_PATH))

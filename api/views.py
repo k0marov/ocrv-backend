@@ -6,12 +6,13 @@ from rest_framework.decorators import api_view
 from common.exceptions import error_response
 from common.time import format_duration
 from . import serializers
+from .di import deps
 from .features import texts, speeches
 
 
 @api_view(['GET'])
 def texts(request: Request):
-    texts = texts.get_texts(str(request.user.id))
+    texts = deps.texts.get_texts(str(request.user.id))
     serialized = serializers.TextSerializer(texts, many=True).data
     return Response({'texts': serialized})
 
@@ -20,7 +21,7 @@ def skips(request: Request):
     serializer = serializers.SkipDTOSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     skip = serializer.save(user_id=request.user.id)
-    texts.skip_text(skip)
+    deps.texts.skip_text(skip)
     return Response(status=status.HTTP_200_OK)
 
 
@@ -31,7 +32,7 @@ def speeches(request: Request):
     rec = serializer.save(user_id=str(request.user.id))
     # TODO: factor out the error handling
     try:
-        speeches.save_recording(rec)
+        deps.speeches.save_recording(rec)
     except texts.TextNotFound:
         return error_response(
             'Текст с указанным id не найден.',
