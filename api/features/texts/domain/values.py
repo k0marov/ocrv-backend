@@ -1,4 +1,5 @@
 import dataclasses
+import typing
 
 from .external import models
 from ...filepaths.domain.values import CompletionStatus
@@ -7,7 +8,7 @@ from ...filepaths.domain.values import CompletionStatus
 @dataclasses.dataclass
 class Text:
     model: models.TextModel
-    completed: CompletionStatus
+    completed: typing.Optional[CompletionStatus]
 
 @dataclasses.dataclass
 class SkipDTO:
