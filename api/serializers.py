@@ -4,7 +4,7 @@ from .features.filepaths.domain.values import RecordingMeta
 from .features.texts.domain.values import SkipDTO
 from .features.speeches.domain.values import Recording
 
-class _CompletedStatusSerializer(serializers.Serializer):
+class CompletedStatusSerializer(serializers.Serializer):
     url = serializers.CharField()
     is_video = serializers.BooleanField()
 
@@ -12,7 +12,7 @@ class TextSerializer(serializers.Serializer):
     id = serializers.CharField(source='model.id')
     text = serializers.CharField(source='model.text')
     note = serializers.CharField(source='model.note')
-    completed = _CompletedStatusSerializer(required=False)
+    completed = CompletedStatusSerializer(required=False)
     min_duration = serializers.IntegerField(source='model.min_duration', required=False)
     max_duration = serializers.IntegerField(source='model.max_duration', required=False)
 

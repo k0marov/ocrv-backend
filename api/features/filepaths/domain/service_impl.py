@@ -43,7 +43,7 @@ class FilepathsServiceImpl(service.FilepathsService):
         if not exists: return None
         return values.CompletionStatus(
             url=self._get_url(media_path),
-            is_video=True,
+            is_video=is_video,
         )
 
     def _get_filepath(self, rec: values.RecordingMeta) -> pathlib.Path:

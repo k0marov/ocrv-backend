@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 
+from api import serializers
 from api.di import deps
 from api.features import texts, speeches
 from api.features.speeches.domain import values
@@ -10,7 +11,9 @@ from common.time import format_duration
 
 def save_recording_with_exceptions(rec: values.Recording) -> Response:
     try:
-        deps.speeches.save_recording(rec)
+        completed_status = deps.speeches.save_recording(rec)
+        serialized = serializers.CompletedStatusSerializer(completed_status).data
+        return Response(serialized)
     except texts.TextNotFound:
         return error_response(
             'Текст с указанным id не найден.',
