@@ -1,4 +1,5 @@
 import dataclasses
+import pathlib
 
 
 @dataclasses.dataclass
@@ -9,6 +10,11 @@ class RecordingMeta:
 
 @dataclasses.dataclass
 class RecordingPaths:
-    audio_path: str
-    video_path: str
+    audio_path: pathlib.Path
+    video_path: pathlib.Path
+
+@dataclasses.dataclass
+class CompletionStatus:
+    url: str
+    is_video: bool
 

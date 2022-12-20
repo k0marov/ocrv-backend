@@ -15,16 +15,16 @@ class SpeechesServiceImpl(SpeechesService):
         paths = self._filepaths.get_filepaths(rec.meta)
         try:
             self._encode_rec(rec, paths)
-            self._validator.validate_duration_and_log(rec, paths.audio_path)
+            self._validator.validate_duration_and_log(rec, str(paths.audio_path))
             log.log_success(rec)
         except Exception as e:
             self._cleanup(paths)
             raise e
 
     def _encode_rec(self, rec: values.Recording, paths: RecordingPaths):
-        self._media.re_encode(rec.tmp_blob_path, paths.audio_path)
+        self._media.re_encode(rec.tmp_blob_path, str(paths.audio_path))
         if rec.meta.is_video:
-            self._media.re_encode(rec.tmp_blob_path, paths.video_path)
+            self._media.re_encode(rec.tmp_blob_path, str(paths.video_path))
 
     def _cleanup(self, paths: RecordingPaths):
         try:

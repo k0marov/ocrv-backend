@@ -18,7 +18,7 @@ class APIDependencies:
 
 
 def initialize() -> APIDependencies:
-    paths = PathsConfig(texts_path=settings.TEXTS_PATH, recordings_dir=settings.RECORDINGS_DIR)
+    paths = PathsConfig(texts_path=settings.TEXTS_PATH, recordings_dir=settings.RECORDINGS_DIR, recordings_url=settings.RECORDINGS_URL)
     filepaths = FilepathsServiceImpl(paths)
     text = TextsServiceImpl(filepaths, TextsStoreImpl(filepaths))
     media = MediaEncoderImpl()

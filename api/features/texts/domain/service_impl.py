@@ -18,7 +18,7 @@ class TextsServiceImpl(TextsService):
             raise NoTexts()
         return [values.Text(
             model=model,
-            completed_by_caller=self._filepaths.is_completed(text_id=model.id, by_user_id=user_id),
+            completed=self._filepaths.is_completed(text_id=model.id, by_user_id=user_id),
         ) for model in models_list]
 
     def find_text(self, text_id: str) -> Optional[models.TextModel]:
