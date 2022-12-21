@@ -29,5 +29,3 @@ def save_recording_with_exceptions(rec: values.Recording) -> Response:
             f'Не соблюдено макс. время начитки.\nТребуется {format_duration(e.want)}, получено {format_duration(e.got)}.',
             status.HTTP_400_BAD_REQUEST
         )
-
-    return Response(status=status.HTTP_200_OK)
