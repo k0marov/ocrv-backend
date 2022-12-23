@@ -5,17 +5,15 @@ from rest_framework import serializers
 
 
 class SignUpSerializer(serializers.ModelSerializer):
-    def validate(self, data):
-        errors = dict()
+    def _validate_password(self, password: str) -> None:
+        """Validates the password using the default django validation and converts the error to the DRF one"""
         try:
-            password_validation.validate_password(password=data.get('password'))
-        # the default django ValidationError, not the drf one
+            password_validation.validate_password(password=password)
         except exceptions.ValidationError as e:
-            errors['password'] = list(e.messages)
+            raise serializers.ValidationError({'password': e.messages})
 
-        if errors:
-            raise serializers.ValidationError(errors)
-
+    def validate(self, data):
+        self._validate_password(data.get('password'))
         return data
 
     def create(self, validated_data):
