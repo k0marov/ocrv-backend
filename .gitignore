@@ -1,8 +1,5 @@
 .env
 .idea
 __pycache__
-logs.log
-texts.csv
-db.sqlite3
-recordings/
+dev/
 static/
