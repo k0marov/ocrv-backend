@@ -19,5 +19,8 @@ LOG_PATH = Path(_get_env('OCRV_RECORDER_LOG_PATH')).resolve()
 RECORDINGS_DIR = Path(_get_env('OCRV_RECORDER_RECORDINGS_DIR')).resolve()
 DB_PATH = Path(_get_env('OCRV_RECORDER_DB_PATH')).resolve()
 
-
 RECORDINGS_URL = _get_env('OCRV_RECORDER_RECORDINGS_URL')
+
+
+STATIC_URL = _get_env('OCRV_RECORDER_STATIC_URL')
+STATIC_ROOT = Path(_get_env('OCRV_RECORDER_STATIC_ROOT')).resolve()
