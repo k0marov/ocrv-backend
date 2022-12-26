@@ -5,6 +5,8 @@ ADD ./requirements.txt /app/
 
 RUN pip install --upgrade pip 
 RUN pip install gunicorn 
-RUN pip install -r backend/requirements.txt 
+RUN pip install -r /app/requirements.txt
 
 ADD ./server /app/
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
