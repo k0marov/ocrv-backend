@@ -12,6 +12,9 @@ def _get_env(key: str) -> str:
     if not val: raise ImproperlyConfigured(f'Please specify {key} as an environment variable.')
     return val
 
+
+DEBUG = _get_env("OCRV_RECORDER_DEBUG") == "1"
+
 SECRET_KEY = _get_env('OCRV_RECORDER_SECRET_KEY')
 
 TEXTS_PATH = Path(_get_env('OCRV_RECORDER_TEXTS_PATH')).resolve()

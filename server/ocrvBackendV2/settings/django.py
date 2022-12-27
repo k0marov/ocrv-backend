@@ -9,7 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # and we can use the temporary_file_path() from TemporaryUploadedFile for it
 FILE_UPLOAD_MAX_MEMORY_SIZE = 0
 
-DEBUG = True
+# DEBUG is specified in config.py
+#DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
