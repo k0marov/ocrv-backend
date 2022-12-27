@@ -4,7 +4,7 @@ from django.conf import settings
 _log_format = f"%(asctime)s - %(message)s"
 
 def _get_file_handler():
-    file_handler = logging.FileHandler(str(settings.LOG_PATH), 'w', 'utf-8')
+    file_handler = logging.FileHandler(settings.LOG_PATH, delay=True)
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(logging.Formatter(_log_format, datefmt='%Y-%m-%d %H:%M:%S'))
     return file_handler
